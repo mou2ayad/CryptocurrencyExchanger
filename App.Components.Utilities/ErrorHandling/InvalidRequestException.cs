@@ -1,8 +1,9 @@
-﻿using System;
+﻿using App.Components.Utilities.ErrorHandling;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace App.Components.Utilities.ErrorHandling
+namespace App.Components.Utilities.CustomException
 {
     public class InvalidRequestException: Exception
     {

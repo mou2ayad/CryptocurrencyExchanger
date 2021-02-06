@@ -7,7 +7,6 @@ namespace App.Components.Utilities.APIClient
 {
     public class RestAPIException : HttpRequestException
     {
-        public HttpStatusCode HttpStatus { private set; get; }
         public HttpExceptionDetails ExceptionDetails { private set; get; }
         public RestAPIException(string ServiceName, HttpStatusCode httpStatusCode, string ResponseAsString) : base(string.Format("Request to [{1}] faild with following response: {0}", ResponseAsString, ServiceName))
         {
@@ -22,9 +21,7 @@ namespace App.Components.Utilities.APIClient
                 ExceptionDetails.StatusCode = (int)HttpStatusCode.BadRequest;
                 ExceptionDetails.ErrorMessage = "Bad Request";
             }
-          
-
+         
         }
-
     }
 }

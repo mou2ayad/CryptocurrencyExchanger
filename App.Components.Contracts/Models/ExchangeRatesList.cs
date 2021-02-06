@@ -6,7 +6,11 @@ namespace App.Components.Contracts.Models
 {
     public class ExchangeRatesList
     {
+        public ExchangeRatesList()
+        {
+            CurrenciesRates = new Dictionary<string, decimal>();
+        }
         public string BaseCurrencySymbol { set; get; }
-        public List<ExchangeRate> CurrenciesRates { set; get; }
+        public Dictionary<string,decimal> CurrenciesRates { set; get; }
     }
 }
