@@ -12,7 +12,10 @@ namespace App.Components.CoinmarketcapApiClient.Config
         public string MapEndpoint { set; get; }
         public List<string> SupportedTargetedCurrencies { set; get; }
         public List<string> DefaultTargetedCurrencies { set; get; }
+        public string APIKeyName { set; get; }
+        public string APIKeyValue { set; get; }
         public bool EnableCaching { set; get; }
         public int ExpiredAfterInMinutes { set; get; }
+        public int NumberOfSupportedCryptocurrencyCount { set; get; }
     }
 }

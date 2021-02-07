@@ -31,7 +31,7 @@ namespace App.Components.CoinmarketcapApiClient
             _config = options.Value;
             _httpClientFactory = httpClientFactory;
             _logger = logger;
-            LoadSupportedCurrencies();
+            LoadSupportedCurrencies().Wait();
 
         }
         public virtual async Task<ExchangeRatesList> GetExchangeRatesList(string BaseCurrencySymbol, params string[] TargetedCurrencies)
@@ -57,11 +57,11 @@ namespace App.Components.CoinmarketcapApiClient
             query["convert"] = string.Join(",", TargetedCurrencies);
             query["aux"] = "is_active"; // adding this parameter to reduce the size of the response
             var request = new HttpRequestMessage(HttpMethod.Get, $"/{_config.Version}/{_config.QuotesEndpoint}?{query}");
-            request.Headers.Add("X-CMC_PRO_API_KEY", "10e765f4-bcd3-4ede-b9a8-0c7c550181e7");
+            request.Headers.Add(_config.APIKeyName, _config.APIKeyValue);
             var httpclient = _httpClientFactory.CreateClient(ServiceProviderName);
             var response = await httpclient.SendAsync(request);
             var responseString = await response.Content.ReadAsStringAsync();
-            var CoinmarketcapAPIResponse = JsonConvert.DeserializeObject<CoinmarketcapAPIResponse>(responseString);
+            var CoinmarketcapAPIResponse = JsonConvert.DeserializeObject<CoinmarketcapAPIQuotesResponse>(responseString);
             if (response.IsSuccessStatusCode)
             {
                 if (CoinmarketcapAPIResponse?.Status?.ErrorCode == 0
@@ -83,15 +83,36 @@ namespace App.Components.CoinmarketcapApiClient
             throw new RestAPIException(ServiceProviderName, response.StatusCode, CoinmarketcapAPIResponse.Status.ErrorMessage);
         }
 
-        public Task<ICollection<string>> LoadSupportedCurrencies()
+        public async Task<ICollection<string>> LoadSupportedCurrencies()
         {
-            return Task.Run(() =>
+            var query = HttpUtility.ParseQueryString(String.Empty);
+            query["start"] = "1";
+            query["aux"] = "is_active"; // adding this parameter to reduce the size of the response
+            query["sort"] = "cmc_rank";
+            if (_config.NumberOfSupportedCryptocurrencyCount > 0)
+                query["limit"] = _config.NumberOfSupportedCryptocurrencyCount.ToString();
+            var request = new HttpRequestMessage(HttpMethod.Get, $"/{_config.Version}/{_config.MapEndpoint}?{query}");
+            request.Headers.Add(_config.APIKeyName, _config.APIKeyValue);
+            var httpclient = _httpClientFactory.CreateClient(ServiceProviderName);
+            var response = await httpclient.SendAsync(request);
+            var responseString = await response.Content.ReadAsStringAsync();
+            var CoinmarketcapAPIMapResponse = JsonConvert.DeserializeObject<CoinmarketcapAPIMapResponse>(responseString);
+            if (response.IsSuccessStatusCode)
             {
-                supportedCryptoCurrencies = new Dictionary<string, int>();
-                supportedCryptoCurrencies.Add("BTC", 1);
-                return supportedCryptoCurrencies.Keys as ICollection<string>;
-                throw new Exception("supportedCryptoCurrencies Attribute is missing in the Config");
-            });
+                if (CoinmarketcapAPIMapResponse?.Status?.ErrorCode == 0
+                   && CoinmarketcapAPIMapResponse.Status.ErrorMessage == null
+                   && CoinmarketcapAPIMapResponse.Status.CreditCount > 0
+                   && CoinmarketcapAPIMapResponse.Data?.Count > 0
+                   && CoinmarketcapAPIMapResponse.Data.Count > 0
+                   )
+                {
+                    CryptocurrencyComparer CryptoCurenciesComparer = new CryptocurrencyComparer();
+                    supportedCryptoCurrencies = CoinmarketcapAPIMapResponse.Data.Distinct(CryptoCurenciesComparer).ToDictionary(k => k.symbol, v => v.id);
+                    return supportedCryptoCurrencies.Keys as ICollection<string>;
+                }
+            }
+            throw new RestAPIException(ServiceProviderName,response.StatusCode, CoinmarketcapAPIMapResponse.Status.ErrorMessage);
+            
         }
     }
 }

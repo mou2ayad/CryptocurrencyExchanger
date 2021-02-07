@@ -29,7 +29,6 @@ namespace App.Testing.CoinmarketcapAPIClientTest
         public void TestLoadConfiguration()
         {
             // Arrange 
-            //var serviceProvider = new ServiceProvider(appsettingName);
 
             // Act 
             var config = serviceProvider.GetCoinmarketcapAPIConfiguration().Value;
@@ -42,6 +41,8 @@ namespace App.Testing.CoinmarketcapAPIClientTest
             config.SupportedTargetedCurrencies.Should().NotBeNullOrEmpty().And.HaveCountGreaterThan(0);
             config.DefaultTargetedCurrencies.Should().NotBeNullOrEmpty().And.HaveCountGreaterThan(0);
             config.EnableCaching.Should().BeFalse();
+            config.APIKeyName.Should().NotBeNullOrEmpty();
+            config.APIKeyValue.Should().NotBeNullOrEmpty();
         }
         [Fact]
         public void TestGetExchangeRatesList_UnSupportedBaseCryptoCurrency()

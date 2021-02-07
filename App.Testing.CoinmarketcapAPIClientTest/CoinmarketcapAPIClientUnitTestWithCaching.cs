@@ -31,6 +31,10 @@ namespace App.Testing.CoinmarketcapAPIClientTest
             config.DefaultTargetedCurrencies.Should().NotBeNullOrEmpty().And.HaveCountGreaterThan(0);
             config.EnableCaching.Should().BeTrue();
             config.ExpiredAfterInMinutes.Should().BeGreaterThan(0);
+            config.APIKeyName.Should().NotBeNullOrEmpty();
+            config.APIKeyValue.Should().NotBeNullOrEmpty();
+
+
         }
         [Fact]
         public void TestGetExchangeRatesListWithCache_UnsupportedBaseCryptoCurrency()
