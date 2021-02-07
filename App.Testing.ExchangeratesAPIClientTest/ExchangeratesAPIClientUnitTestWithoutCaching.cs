@@ -10,20 +10,18 @@ using Microsoft.Extensions.Caching.Memory;
 
 namespace App.Testing.ExchangeratesAPIClientTest
 {
-    public class ExchangeratesAPIClientUnitTest
+    public class ExchangeratesAPIClientUnitTestWithoutCaching
     {
-        private IExchangeRatesProvider _exchangeRatesProvider;
-        private readonly IMemoryCache _memoryCache;
-        public ExchangeratesAPIClientUnitTest()
+        private readonly string appsettingName = "appsettings.json";
+        private IExchangeRatesProvider GetExchangeRatesProvider()
         {
-            _exchangeRatesProvider = ServiceProviderFactory.GetServiceProvider().GetExchangeratesAPIProviderService();
-
+            return ServiceProviderFactory.GetServiceProvider(appsettingName).GetExchangeratesAPIProviderService();
         }
         [Fact]
         public void TestLoadSupportedCurrencies()
         {
             // Act 
-            var resutls = _exchangeRatesProvider.LoadSupportedCurrencies().Result;
+            var resutls = GetExchangeRatesProvider().LoadSupportedCurrencies().Result;
 
             // Assert  
             resutls.Should().NotBeNullOrEmpty();
@@ -32,7 +30,7 @@ namespace App.Testing.ExchangeratesAPIClientTest
         public void TestLoadConfiguration()
         {
             // Arrange 
-            var serviceProvider = ServiceProviderFactory.GetServiceProvider();
+            var serviceProvider = ServiceProviderFactory.GetServiceProvider(appsettingName);
 
             // Act 
             var config = serviceProvider.GetExchangeratesAPIConfiguration().Value;
@@ -42,6 +40,7 @@ namespace App.Testing.ExchangeratesAPIClientTest
             config.ServiceBaseUrl.Should().NotBeNullOrEmpty();
             config.ExchangeRateEndpoint.Should().NotBeNullOrEmpty();
             config.SupportedCurrencies.Should().NotBeNullOrEmpty().And.HaveCountGreaterThan(0);
+            config.EnableCaching.Should().BeFalse();
         }
         [Fact]
         public void TestGetExchangeRatesList_UnSupportedBaseCurrency()
@@ -50,7 +49,7 @@ namespace App.Testing.ExchangeratesAPIClientTest
             string BaseCurrencySymbol = "MYR";
 
             // Act 
-            Action act =  () =>  _exchangeRatesProvider.GetExchangeRatesList(BaseCurrencySymbol).Wait();
+            Action act =  () => GetExchangeRatesProvider().GetExchangeRatesList(BaseCurrencySymbol).Wait();
 
             // Assert  
             act.Should().Throw<InvalidRequestException>()
@@ -64,7 +63,7 @@ namespace App.Testing.ExchangeratesAPIClientTest
             string[] targetedCurencies = { "EUR", "GBP" };
 
             // Act 
-            var results = _exchangeRatesProvider.GetExchangeRatesList(BaseCurrencySymbol, targetedCurencies).Result;
+            var results = GetExchangeRatesProvider().GetExchangeRatesList(BaseCurrencySymbol, targetedCurencies).Result;
 
             // Assert  
             // check if the baseCurrencyIn the response equal the input BaseCurrencySymbol
@@ -85,11 +84,11 @@ namespace App.Testing.ExchangeratesAPIClientTest
         {
             // Arrange 
             string BaseCurrencySymbol = "USD";
-            var config = ServiceProviderFactory.GetServiceProvider().GetExchangeratesAPIConfiguration().Value;
+            var config = ServiceProviderFactory.GetServiceProvider(appsettingName).GetExchangeratesAPIConfiguration().Value;
             List<string> targetedCurencies =config.SupportedCurrencies;
 
             // Act 
-            var results = _exchangeRatesProvider.GetExchangeRatesList(BaseCurrencySymbol).Result;
+            var results = GetExchangeRatesProvider().GetExchangeRatesList(BaseCurrencySymbol).Result;
 
             // Assert  
             // check if the baseCurrencyIn the response equal the input BaseCurrencySymbol
@@ -106,14 +105,14 @@ namespace App.Testing.ExchangeratesAPIClientTest
 
         }
         [Fact]
-        public void TestGetExchangeRatesList_InvalidRequest()
+        public void TestGetExchangeRatesList_InvalidTargetedCurrencies()
         {
             // Arrange 
             string BaseCurrencySymbol = "USD";
             string[] targetedCurencies = { "OOKS", "SYP" };
 
             // Act
-            Action act = () => _exchangeRatesProvider.GetExchangeRatesList(BaseCurrencySymbol, targetedCurencies).Wait();
+            Action act = () => GetExchangeRatesProvider().GetExchangeRatesList(BaseCurrencySymbol, targetedCurencies).Wait();
 
             // Assert  
             act.Should().Throw<RestAPIException>()
@@ -121,25 +120,29 @@ namespace App.Testing.ExchangeratesAPIClientTest
                 .Where(e => e.ExceptionDetails.StatusCode == (int)System.Net.HttpStatusCode.BadRequest);
         }
         [Fact]
-        public void TestGetExchangeRatesList_Caching()
+        public void TestGetExchangeRatesList_Without_Caching()
         {
             // Arrange 
             string BaseCurrencySymbol = "USD";
             string[] targetedCurencies = { "EUR", "GBP" };
-            var cache = ServiceProviderFactory.GetServiceProvider().GetService<IMemoryCache>();
+            var cache = ServiceProviderFactory.GetServiceProvider(appsettingName).GetService<IMemoryCache>();
+            // create a cache key for one of the currencies 
             string key = $"exchangeratesapi.io_usd_eur";
+            //removing the key from the cache in case it is there
             cache.Remove(key);
             decimal cacheValue;
 
+            // Assert  
+            // ensure that we don't have the key in the cache by ren
             cache.TryGetValue(key, out cacheValue).Should().BeFalse();
 
             // Act 
-            var results = _exchangeRatesProvider.GetExchangeRatesList(BaseCurrencySymbol, targetedCurencies).Result;
+            // get the currency from the provider
+            var results = GetExchangeRatesProvider().GetExchangeRatesList(BaseCurrencySymbol, targetedCurencies).Result;
 
             // Assert  
-            cache.TryGetValue(key, out cacheValue).Should().BeTrue();
-            results.CurrenciesRates.Should().ContainKeys("EUR", "GBP");
-            results.CurrenciesRates["EUR"].Should().Be(cacheValue);
+            // ensure that the value is not saved in the cache
+            cache.TryGetValue(key, out cacheValue).Should().BeFalse();
            
         }
 

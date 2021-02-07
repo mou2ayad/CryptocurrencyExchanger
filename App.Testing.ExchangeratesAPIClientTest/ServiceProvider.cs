@@ -6,27 +6,37 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Microsoft.Extensions.Caching.Memory;
+using System.Collections.Generic;
 
 namespace App.Testing.ExchangeratesAPIClientTest
 {
-    internal static class ServiceProviderFactory
+    internal static class AppsettingsFiles
     {
-        private static ServiceProvider serviceProvider;
-        public static ServiceProvider GetServiceProvider()
+        public const string Appsettings= "appsettings.json";
+
+    }
+    internal class ServiceProviderFactory
+    {
+        private static Dictionary<string, ServiceProvider> serviceProviders=new Dictionary<string, ServiceProvider>();
+
+        public static ServiceProvider GetServiceProvider(string appsettingsFileName,bool newInstance=false)
         {
-            if (serviceProvider == null)
-                serviceProvider = ServiceProvider.GetInstance();
-            return serviceProvider;
+            if (newInstance)
+                return new ServiceProvider(appsettingsFileName);
+
+            if (!serviceProviders.ContainsKey(appsettingsFileName))
+                serviceProviders.Add(appsettingsFileName, new ServiceProvider(appsettingsFileName));
+            return serviceProviders[appsettingsFileName];
         }
     }
     internal class ServiceProvider
     {
         private IConfiguration configuration { get; set; }
         private IServiceProvider _serviceProvider { set; get; }
-        private ServiceProvider()
+        public  ServiceProvider(string appsettingsFileName)
         {
             var config = new ConfigurationBuilder()
-              .AddJsonFile("appsettings.json")
+              .AddJsonFile($"Settings/{appsettingsFileName}")
               .Build();
 
             configuration = config;
@@ -38,10 +48,7 @@ namespace App.Testing.ExchangeratesAPIClientTest
 
         
 
-        public static ServiceProvider GetInstance()
-        {
-            return new ServiceProvider();
-        }
+      
         private IServiceProvider GetServiceProvider()
         {
             ServiceCollection services = new ServiceCollection();

@@ -1,5 +1,6 @@
 ﻿using App.Components.Contracts.Models;
 using App.Components.ExchangeratesApiClient.Config;
+using App.Components.Utilities.CustomException;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -23,6 +24,11 @@ namespace App.Components.ExchangeratesApiClient
         }
         public override async Task<ExchangeRatesList> GetExchangeRatesList(string BaseCurrencySymbol, params string[] TargetedCurrencies)
         {
+            if (!supportedCurrencies.Contains(BaseCurrencySymbol))
+                throw new InvalidRequestException($"{BaseCurrencySymbol} is Unsupported currency");
+            if (TargetedCurrencies == null || TargetedCurrencies.Length == 0)
+                TargetedCurrencies = supportedCurrencies.ToArray();
+
             List<string> newTargets = new List<string>();
             ExchangeRatesList exchangeRatesList = new ExchangeRatesList() { BaseCurrencySymbol = BaseCurrencySymbol };
             foreach(var targetedcurrency in TargetedCurrencies)
@@ -39,7 +45,7 @@ namespace App.Components.ExchangeratesApiClient
                 var rates=await base.GetExchangeRatesList(BaseCurrencySymbol, newTargets.ToArray());
                 foreach (var rate in rates.CurrenciesRates)
                 {
-                    _memoryCache.Set(GetCacheKey(BaseCurrencySymbol, rate.Key), rate.Value, TimeSpan.FromHours(_config.ExpiredAfterInMinutes));
+                    _memoryCache.Set(GetCacheKey(BaseCurrencySymbol, rate.Key), rate.Value, DateTimeOffset.Now.AddMinutes(_config.ExpiredAfterInMinutes));
                     exchangeRatesList.CurrenciesRates.Add(rate.Key, rate.Value);
                 }
 
