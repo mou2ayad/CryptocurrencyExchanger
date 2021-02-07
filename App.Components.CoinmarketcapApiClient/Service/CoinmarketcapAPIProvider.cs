@@ -31,7 +31,6 @@ namespace App.Components.CoinmarketcapApiClient
             _config = options.Value;
             _httpClientFactory = httpClientFactory;
             _logger = logger;
-            supportedCryptoCurrencies = new Dictionary<string, int>();
             LoadSupportedCurrencies();
 
         }

@@ -13,15 +13,11 @@ namespace App.Testing.CoinmarketcapAPIClientTest
     public class CoinmarketcapAPIClientUnitTestWithCaching
     {
         private readonly string appsettingName = "appsettingsWithCache.json";
-        private IExchangeRatesProvider GetExchangeRatesProvider()
-        {
-            return new ServiceProvider(appsettingName).GetCoinmarketcapAPIProviderService();
-        }       
+        private ServiceProvider serviceProvider => ServiceProviderFactory.Get(appsettingName);
         [Fact]
         public void TestLoadConfigurationWithCache()
         {
             // Arrange 
-            var serviceProvider =new ServiceProvider(appsettingName);
 
             // Act 
             var config = serviceProvider.GetCoinmarketcapAPIConfiguration().Value;
@@ -43,7 +39,7 @@ namespace App.Testing.CoinmarketcapAPIClientTest
             string BaseCryptoCurrencySymbol = "SYP";
 
             // Act 
-            Action act =  () => GetExchangeRatesProvider().GetExchangeRatesList(BaseCryptoCurrencySymbol).Wait();
+            Action act =  () => serviceProvider.GetCoinmarketcapAPIProviderService().GetExchangeRatesList(BaseCryptoCurrencySymbol).Wait();
 
             // Assert  
             act.Should().Throw<InvalidRequestException>()
@@ -57,7 +53,7 @@ namespace App.Testing.CoinmarketcapAPIClientTest
             string[] targetedCurencies = { "EUR", "USD" };
 
             // Act 
-            var results = GetExchangeRatesProvider().GetExchangeRatesList(BaseCurrencySymbol, targetedCurencies).Result;
+            var results = serviceProvider.GetCoinmarketcapAPIProviderService().GetExchangeRatesList(BaseCurrencySymbol, targetedCurencies).Result;
 
             // Assert  
             // check if the baseCurrencyIn the response equal the input BaseCurrencySymbol
@@ -78,7 +74,6 @@ namespace App.Testing.CoinmarketcapAPIClientTest
         {
             // Arrange 
             string BaseCurrencySymbol = "BTC";
-            var serviceProvider = new ServiceProvider(appsettingName);
             var config = serviceProvider.GetCoinmarketcapAPIConfiguration().Value;
             List<string> targetedCurencies =config.DefaultTargetedCurrencies;
 
@@ -106,7 +101,6 @@ namespace App.Testing.CoinmarketcapAPIClientTest
             // Arrange 
             string BaseCurrencySymbol = "BTC";
             string[] targetedCurencies = { "EUR", "USD" };
-            ServiceProvider serviceProvider = new ServiceProvider(appsettingName);
             var cache = serviceProvider.GetService<IMemoryCache>();
             // create a cache key for one of the currencies 
             string key = $"coinmarketcapapi_btc_eur";
