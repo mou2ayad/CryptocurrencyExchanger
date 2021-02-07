@@ -1,20 +1,16 @@
 ﻿using System;
 using App.Components.Contracts.Contracts;
-using App.Components.ExchangeratesApiClient.DependencyInjection;
-using App.Components.ExchangeratesApiClient.Config;
+using App.Components.CoinmarketcapApiClient.DependencyInjection;
+using App.Components.CoinmarketcapApiClient.Config;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Microsoft.Extensions.Caching.Memory;
 using System.Collections.Generic;
 
-namespace App.Testing.ExchangeratesAPIClientTest
+namespace App.Testing.CoinmarketcapAPIClientTest
 {
-    internal static class AppsettingsFiles
-    {
-        public const string Appsettings= "appsettings.json";
-
-    }
+   
     internal class ServiceProvider
     {
         private IConfiguration configuration { get; set; }
@@ -38,17 +34,17 @@ namespace App.Testing.ExchangeratesAPIClientTest
             services.AddSingleton<IConfiguration>(configuration);
             services.AddMemoryCache();
             services.AddOptions();
-            services.InjectExchangeratesAPIProviderService(configuration);
+            services.InjectCoinmarketcapAPIProviderService(configuration);
             return services.BuildServiceProvider();
         }
 
-        public IExchangeRatesProvider GetExchangeratesAPIProviderService()
+        public IExchangeRatesProvider GetCoinmarketcapAPIProviderService()
         {
             return _serviceProvider.GetService<IExchangeRatesProvider>();
         }
-        public IOptions<ExchangeratesApiOptions> GetExchangeratesAPIConfiguration()
+        public IOptions<CoinmarketcapApiOptions> GetCoinmarketcapAPIConfiguration()
         {
-            return _serviceProvider.GetService<IOptions<ExchangeratesApiOptions>>();
+            return _serviceProvider.GetService<IOptions<CoinmarketcapApiOptions>>();
         }
     }
 }

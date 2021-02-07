@@ -13,6 +13,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "App.Components.Exchangerate
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "App.Testing.ExchangeratesAPIClientTest", "App.Testing.ExchangeratesAPIClientTest\App.Testing.ExchangeratesAPIClientTest.csproj", "{2A1C900A-6E6B-4A5C-A68D-2CF40B170566}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "App.Components.CoinmarketcapApiClient", "App.Components.CoinmarketcapApiClient\App.Components.CoinmarketcapApiClient.csproj", "{885C5B14-CDBC-417C-A1E7-0A0E769C8EB4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "App.Testing.CoinmarketcapAPIClientTest", "App.Testing.CoinmarketcapAPIClientTest\App.Testing.CoinmarketcapAPIClientTest.csproj", "{BBDA3846-02F3-4B6A-9880-D29A8D5B9580}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +43,14 @@ Global
 		{2A1C900A-6E6B-4A5C-A68D-2CF40B170566}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2A1C900A-6E6B-4A5C-A68D-2CF40B170566}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2A1C900A-6E6B-4A5C-A68D-2CF40B170566}.Release|Any CPU.Build.0 = Release|Any CPU
+		{885C5B14-CDBC-417C-A1E7-0A0E769C8EB4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{885C5B14-CDBC-417C-A1E7-0A0E769C8EB4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{885C5B14-CDBC-417C-A1E7-0A0E769C8EB4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{885C5B14-CDBC-417C-A1E7-0A0E769C8EB4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BBDA3846-02F3-4B6A-9880-D29A8D5B9580}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BBDA3846-02F3-4B6A-9880-D29A8D5B9580}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BBDA3846-02F3-4B6A-9880-D29A8D5B9580}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BBDA3846-02F3-4B6A-9880-D29A8D5B9580}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

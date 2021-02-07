@@ -8,14 +8,14 @@ using System.Collections.Generic;
 using App.Components.Utilities.APIClient;
 using Microsoft.Extensions.Caching.Memory;
 
-namespace App.Testing.ExchangeratesAPIClientTest
+namespace App.Testing.CoinmarketcapAPIClientTest
 {
-    public class ExchangeratesAPIClientUnitTestWithCaching
+    public class CoinmarketcapAPIClientUnitTestWithCaching
     {
         private readonly string appsettingName = "appsettingsWithCache.json";
         private IExchangeRatesProvider GetExchangeRatesProvider()
         {
-            return new ServiceProvider(appsettingName).GetExchangeratesAPIProviderService();
+            return new ServiceProvider(appsettingName).GetCoinmarketcapAPIProviderService();
         }       
         [Fact]
         public void TestLoadConfigurationWithCache()
@@ -24,35 +24,37 @@ namespace App.Testing.ExchangeratesAPIClientTest
             var serviceProvider =new ServiceProvider(appsettingName);
 
             // Act 
-            var config = serviceProvider.GetExchangeratesAPIConfiguration().Value;
+            var config = serviceProvider.GetCoinmarketcapAPIConfiguration().Value;
 
             // Assert  
             config.Should().NotBeNull();
             config.ServiceBaseUrl.Should().NotBeNullOrEmpty();
-            config.ExchangeRateEndpoint.Should().NotBeNullOrEmpty();
-            config.SupportedCurrencies.Should().NotBeNullOrEmpty().And.HaveCountGreaterThan(0);
+            config.MapEndpoint.Should().NotBeNullOrEmpty();
+            config.QuotesEndpoint.Should().NotBeNullOrEmpty();
+            config.SupportedTargetedCurrencies.Should().NotBeNullOrEmpty().And.HaveCountGreaterThan(0);
+            config.DefaultTargetedCurrencies.Should().NotBeNullOrEmpty().And.HaveCountGreaterThan(0);
             config.EnableCaching.Should().BeTrue();
             config.ExpiredAfterInMinutes.Should().BeGreaterThan(0);
         }
         [Fact]
-        public void TestGetExchangeRatesListWithCache_UnsupportedBaseCurrency()
+        public void TestGetExchangeRatesListWithCache_UnsupportedBaseCryptoCurrency()
         {
             // Arrange 
-            string BaseCurrencySymbol = "SYP";
+            string BaseCryptoCurrencySymbol = "SYP";
 
             // Act 
-            Action act =  () => GetExchangeRatesProvider().GetExchangeRatesList(BaseCurrencySymbol).Wait();
+            Action act =  () => GetExchangeRatesProvider().GetExchangeRatesList(BaseCryptoCurrencySymbol).Wait();
 
             // Assert  
             act.Should().Throw<InvalidRequestException>()
-                .WithMessage($"{BaseCurrencySymbol} is Unsupported currency");
+                .WithMessage($"{BaseCryptoCurrencySymbol} is invalid or Unsupported Cryptocurrency");
         }
         [Fact]
         public void TestGetExchangeRatesListWithCache_WithTargetedCurrencies()
         {
             // Arrange 
-            string BaseCurrencySymbol = "USD";
-            string[] targetedCurencies = { "EUR", "GBP" };
+            string BaseCurrencySymbol = "BTC";
+            string[] targetedCurencies = { "EUR", "USD" };
 
             // Act 
             var results = GetExchangeRatesProvider().GetExchangeRatesList(BaseCurrencySymbol, targetedCurencies).Result;
@@ -75,13 +77,13 @@ namespace App.Testing.ExchangeratesAPIClientTest
         public void TestGetExchangeRatesListWithCache_WithoutTargetedCurrencies()
         {
             // Arrange 
-            string BaseCurrencySymbol = "USD";
+            string BaseCurrencySymbol = "BTC";
             var serviceProvider = new ServiceProvider(appsettingName);
-            var config = serviceProvider.GetExchangeratesAPIConfiguration().Value;
+            var config = serviceProvider.GetCoinmarketcapAPIConfiguration().Value;
             List<string> targetedCurencies =config.DefaultTargetedCurrencies;
 
             // Act 
-            var results = serviceProvider.GetExchangeratesAPIProviderService().GetExchangeRatesList(BaseCurrencySymbol).Result;
+            var results = serviceProvider.GetCoinmarketcapAPIProviderService().GetExchangeRatesList(BaseCurrencySymbol).Result;
 
             // Assert  
             // check if the baseCurrencyIn the response equal the input BaseCurrencySymbol
@@ -102,12 +104,12 @@ namespace App.Testing.ExchangeratesAPIClientTest
         public void TestGetExchangeRatesList_Caching()
         {
             // Arrange 
-            string BaseCurrencySymbol = "USD";
-            string[] targetedCurencies = { "EUR", "GBP" };
+            string BaseCurrencySymbol = "BTC";
+            string[] targetedCurencies = { "EUR", "USD" };
             ServiceProvider serviceProvider = new ServiceProvider(appsettingName);
             var cache = serviceProvider.GetService<IMemoryCache>();
             // create a cache key for one of the currencies 
-            string key = $"exchangeratesapi.io_usd_eur";
+            string key = $"coinmarketcapapi_btc_eur";
             //removing the key from the cache in case it is there
             cache.Remove(key);
             decimal cacheValue;
@@ -118,14 +120,13 @@ namespace App.Testing.ExchangeratesAPIClientTest
 
             // Act 
             // get the currency from the provider
-            var results = serviceProvider.GetExchangeratesAPIProviderService().GetExchangeRatesList(BaseCurrencySymbol, targetedCurencies).Result;
+            var results = serviceProvider.GetCoinmarketcapAPIProviderService().GetExchangeRatesList(BaseCurrencySymbol, targetedCurencies).Result;
 
             // Assert  
             // ensure that the value is saved in the cache
             cache.TryGetValue(key, out cacheValue).Should().BeTrue();
-            results.CurrenciesRates.Should().ContainKeys("EUR", "GBP");
+            results.CurrenciesRates.Should().ContainKeys("EUR", "USD");
             results.CurrenciesRates["EUR"].Should().Be(cacheValue);
-
 
 
             //Arrange
@@ -135,12 +136,12 @@ namespace App.Testing.ExchangeratesAPIClientTest
 
             // Act 
             // get the currency from the provider through the Proxy cache class
-            results = serviceProvider.GetExchangeratesAPIProviderService().GetExchangeRatesList(BaseCurrencySymbol, targetedCurencies).Result;
+            results = serviceProvider.GetCoinmarketcapAPIProviderService().GetExchangeRatesList(BaseCurrencySymbol, targetedCurencies).Result;
 
             // Assert  
             // ensure that the value comes from the cache not from Provider
             cache.TryGetValue(key, out cacheValue).Should().BeTrue();
-            results.CurrenciesRates.Should().ContainKeys("EUR", "GBP");
+            results.CurrenciesRates.Should().ContainKeys("EUR", "USD");
             results.CurrenciesRates["EUR"].Should().Be(cacheValue);
             results.CurrenciesRates["EUR"].Should().NotBe(actualEurValue);
             cacheValue.Should().Be(10);

@@ -1,5 +1,5 @@
-﻿using App.Components.Contracts.Models;
-using App.Components.ExchangeratesApiClient.Config;
+﻿using App.Components.CoinmarketcapApiClient.Config;
+using App.Components.Contracts.Models;
 using App.Components.Utilities.CustomException;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
@@ -9,24 +9,23 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
-using System.Linq;
 
-namespace App.Components.ExchangeratesApiClient
+namespace App.Components.CoinmarketcapApiClient
 {
-    public class ExchangeratesAPIProviderWithCache : ExchangeratesAPIProvider
+    public class CoinmarketcapAPIProviderWithCache : CoinmarketcapAPIProvider
     {
         private readonly IMemoryCache _memoryCache;
-        private readonly ILogger<ExchangeratesAPIProvider> _logger;
+        private readonly ILogger<CoinmarketcapAPIProviderWithCache> _logger;
        
-        public ExchangeratesAPIProviderWithCache(IOptions<ExchangeratesApiOptions> options, IHttpClientFactory httpClientFactory,IMemoryCache memoryCache, ILogger<ExchangeratesAPIProvider> logger) : base(options, httpClientFactory, logger)
+        public CoinmarketcapAPIProviderWithCache(IOptions<CoinmarketcapApiOptions> options, IHttpClientFactory httpClientFactory,IMemoryCache memoryCache, ILogger<CoinmarketcapAPIProviderWithCache> logger) : base(options, httpClientFactory, logger)
         {
             _memoryCache = memoryCache;
             _logger = logger;
         }
         public override async Task<ExchangeRatesList> GetExchangeRatesList(string BaseCurrencySymbol, params string[] TargetedCurrencies)
         {
-            if (!supportedCurrencies.Contains(BaseCurrencySymbol))
-                throw new InvalidRequestException($"{BaseCurrencySymbol} is Unsupported currency");
+            if (!supportedCryptoCurrencies.ContainsKey(BaseCurrencySymbol))
+                throw new InvalidRequestException($"{BaseCurrencySymbol} is invalid or Unsupported Cryptocurrency");
             if (TargetedCurrencies == null || TargetedCurrencies.Length == 0)
                 TargetedCurrencies = _config.DefaultTargetedCurrencies.ToArray();
 

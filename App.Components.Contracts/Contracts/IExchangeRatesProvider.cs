@@ -9,7 +9,7 @@ namespace App.Components.Contracts.Contracts
     public interface IExchangeRatesProvider
     {
         string ServiceProviderName { get; }
-        Task<List<string>> LoadSupportedCurrencies();
+        Task<ICollection<string>> LoadSupportedCurrencies();
         Task<ExchangeRatesList> GetExchangeRatesList(string BaseCurrencySymbol,params string[] TargetedCurrencies);
         
     }
