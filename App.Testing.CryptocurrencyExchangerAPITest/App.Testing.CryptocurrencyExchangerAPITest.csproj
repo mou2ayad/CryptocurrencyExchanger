@@ -5,7 +5,7 @@
 
     <IsPackable>false</IsPackable>
 
-    <UserSecretsId>05bf9c07-fc4d-41d9-b305-5bd50c1e211b</UserSecretsId>
+    <!--<UserSecretsId>05bf9c07-fc4d-41d9-b305-5bd50c1e211b</UserSecretsId>-->
   </PropertyGroup>
 
   <ItemGroup>
@@ -28,6 +28,7 @@
 
   <ItemGroup>
     <PackageReference Include="FluentAssertions" Version="5.10.3" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="3.1.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="3.1.0" />
 
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.7.1" />
@@ -44,10 +45,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\App.Services.CryptocurrencyExchangerAPI\App.Services.CryptocurrencyExchangerAPI.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="IntegrationTest\" />
   </ItemGroup>
 
 </Project>

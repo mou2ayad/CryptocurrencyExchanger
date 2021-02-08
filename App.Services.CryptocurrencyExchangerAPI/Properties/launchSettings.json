@@ -20,7 +20,7 @@
     "CryptocurrencyExchanger": {
       "commandName": "Project",
       "launchBrowser": true,
-      "launchUrl": "weatherforecast",
+      "launchUrl": "healthcheck",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
