@@ -11,27 +11,9 @@ namespace App.Components.Utilities.ErrorHandling
                 exception.Data.Add("ClientException", true);
             return exception;
         }
-        public static Exception MarkAsNotClientException(this Exception exception)
-        {
-            if (exception.Data.Contains("ClientException"))
-                exception.Data.Remove("ClientException");
-            return exception;
-        }
+       
         public static bool IsClientException(this Exception exception) => exception.Data.Contains("ClientException");
-        
-        public static Exception WithNoLog(this Exception exception)
-        {
-            if (!exception.Data.Contains("WithNoLog"))
-                exception.Data.Add("WithNoLog", true);
-            return exception;
-        }
-        public static Exception WithLog(this Exception exception)
-        {
-            if (exception.Data.Contains("WithNoLog"))
-                exception.Data.Remove("WithNoLog");
-
-            return exception;
-        }
+               
         public static bool IsWithNoLog(this Exception exception) => exception.Data.Contains("WithNoLog");
               
         

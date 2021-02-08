@@ -36,6 +36,8 @@ namespace App.Components.CoinmarketcapApiClient
         }
         public virtual async Task<ExchangeRatesList> GetExchangeRatesList(string BaseCurrencySymbol, params string[] TargetedCurrencies)
         {
+            BaseCurrencySymbol = BaseCurrencySymbol.ToUpper();
+            TargetedCurrencies = TargetedCurrencies.Select(e => e.ToUpper()).ToArray();
             if (!supportedCryptoCurrencies.ContainsKey(BaseCurrencySymbol))
                 throw new InvalidRequestException($"{BaseCurrencySymbol} is invalid or Unsupported Cryptocurrency");
             if (TargetedCurrencies == null || TargetedCurrencies.Length == 0)
@@ -107,7 +109,7 @@ namespace App.Components.CoinmarketcapApiClient
                    )
                 {
                     CryptocurrencyComparer CryptoCurenciesComparer = new CryptocurrencyComparer();
-                    supportedCryptoCurrencies = CoinmarketcapAPIMapResponse.Data.Distinct(CryptoCurenciesComparer).ToDictionary(k => k.symbol, v => v.id);
+                    supportedCryptoCurrencies = CoinmarketcapAPIMapResponse.Data.Distinct(CryptoCurenciesComparer).ToDictionary(k => k.Symbol.ToUpper(), v => v.Id);
                     return supportedCryptoCurrencies.Keys as ICollection<string>;
                 }
             }

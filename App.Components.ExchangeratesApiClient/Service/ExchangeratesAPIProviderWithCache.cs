@@ -25,6 +25,8 @@ namespace App.Components.ExchangeratesApiClient
         }
         public override async Task<ExchangeRatesList> GetExchangeRatesList(string BaseCurrencySymbol, params string[] TargetedCurrencies)
         {
+            BaseCurrencySymbol = BaseCurrencySymbol.ToUpper();
+            TargetedCurrencies = TargetedCurrencies.Select(e => e.ToUpper()).ToArray();
             if (!supportedCurrencies.Contains(BaseCurrencySymbol))
                 throw new InvalidRequestException($"{BaseCurrencySymbol} is Unsupported currency");
             if (TargetedCurrencies == null || TargetedCurrencies.Length == 0)

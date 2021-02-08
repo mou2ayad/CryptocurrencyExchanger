@@ -69,6 +69,30 @@ namespace App.Testing.ExchangeratesAPIClientTest
 
         }
         [Fact]
+        public void TestGetExchangeRatesListWithCache_TestingIfCurrencySymbolCaseSensitive()
+        {
+            // Arrange 
+            string BaseCurrencySymbol = "usd";
+            string[] targetedCurencies = { "eur", "gbp" };
+
+            // Act 
+            var results = serviceProvider.GetExchangeratesAPIProviderService().GetExchangeRatesList(BaseCurrencySymbol, targetedCurencies).Result;
+
+            // Assert  
+            // check if the baseCurrencyIn the response equal the input BaseCurrencySymbol
+            results.BaseCurrencySymbol.ToUpper().Should().Be("USD");
+
+            // check if all response contains rates
+            results.CurrenciesRates.Should().HaveCount(targetedCurencies.Length);
+
+            // check if all the targeted Currencies are in the response
+            targetedCurencies.Select(e=>e.ToUpper()).Except(results.CurrenciesRates.Keys.Select(e => e.ToUpper())).Any().Should().BeFalse();
+
+            // check if all the targeted Currencies are in the response
+            results.CurrenciesRates.Values.Any(e => e == 0).Should().BeFalse();
+
+        }
+        [Fact]
         public void TestGetExchangeRatesListWithCache_WithoutTargetedCurrencies()
         {
             // Arrange 

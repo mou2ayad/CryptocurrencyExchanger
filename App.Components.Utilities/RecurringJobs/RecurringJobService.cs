@@ -11,7 +11,6 @@ namespace App.Components.Utilities.RecurringJobs
     {
         private readonly IRecurringJobManager _recurringJobManager;        
         private readonly ILogger<RecurringJobService> _logger;
-        private readonly string ec2instanceId;
         public List<string> JobsList { private set; get; }
         
         public RecurringJobService(IRecurringJobManager recurringJobManager, ILogger<RecurringJobService> logger)
@@ -26,17 +25,17 @@ namespace App.Components.Utilities.RecurringJobs
             {
                 _recurringJobManager.AddOrUpdate(JobUniqueName, Job, cronExpression);
                 if(JobsList.Contains(JobUniqueName))                                    
-                    _logger.LogInformation("RecurringJobService => Job:{0} has been updated in EC2 {2} with this CronExpression({1}) ", JobUniqueName, cronExpression,ec2instanceId);                
+                    _logger.LogInformation("RecurringJobService => Job:{0} has been updated in EC2 {2} with this CronExpression({1}) ", JobUniqueName, cronExpression);                
                 else
                 {
                     JobsList.Add(JobUniqueName);
-                    _logger.LogInformation("RecurringJobService => Job:{0} has been created in EC2 {2} with this CronExpression({1})", JobUniqueName, cronExpression, ec2instanceId);
+                    _logger.LogInformation("RecurringJobService => Job:{0} has been created in EC2 {2} with this CronExpression({1})", JobUniqueName, cronExpression);
                 }
                 
             }
             catch(Exception ex)
             {
-                _logger.LogError(ex, "RecurringJobService => Failed to create Job:{0} in EC2 {2} with this CronExpression({1})", JobUniqueName, cronExpression, ec2instanceId);
+                _logger.LogError(ex, "RecurringJobService => Failed to create Job:{0} in EC2 {2} with this CronExpression({1})", JobUniqueName, cronExpression);
             }
             
         }

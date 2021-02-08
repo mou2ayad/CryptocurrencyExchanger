@@ -14,9 +14,12 @@ namespace App.Components.CoinmarketcapApiClient.Model
 
     public class CoinmarketcapMapResponseData
     {
-        public int id { get; set; }
-        public string name { get; set; }
-        public string symbol { get; set; }
+        [JsonProperty("id")]
+        public int Id { get; set; }
+        [JsonProperty("name")]
+        public string Name { get; set; }
+        [JsonProperty("symbol")]
+        public string Symbol { get; set; }
         
     }
 
@@ -25,14 +28,14 @@ namespace App.Components.CoinmarketcapApiClient.Model
         public bool Equals(CoinmarketcapMapResponseData x, CoinmarketcapMapResponseData y)
         {
             //First check if both object reference are equal then return true
-            if (object.ReferenceEquals(x, y))
+            if (ReferenceEquals(x, y))
                 return true;
             
             //If either one of the object refernce is null, return false
-            if (object.ReferenceEquals(x, null) || object.ReferenceEquals(y, null))
+            if (x is null || y is null)
                 return false;
             // compare only symbol
-            return x.symbol == y.symbol;
+            return x.Symbol == y.Symbol;
         }
         public int GetHashCode(CoinmarketcapMapResponseData obj)
         {
@@ -42,7 +45,7 @@ namespace App.Components.CoinmarketcapApiClient.Model
 
             //Get the symbol HashCode Value
             //Check for null refernece exception
-            int symbolHashCode = obj.symbol == null ? 0 : obj.symbol.GetHashCode();
+            int symbolHashCode = obj.Symbol == null ? 0 : obj.Symbol.GetHashCode();
             return symbolHashCode;
         }
     }

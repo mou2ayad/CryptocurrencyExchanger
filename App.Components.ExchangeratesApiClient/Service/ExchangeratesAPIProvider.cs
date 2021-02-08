@@ -39,6 +39,8 @@ namespace App.Components.ExchangeratesApiClient
         public virtual async Task<ExchangeRatesList> GetExchangeRatesList(string BaseCurrencySymbol, params string[] TargetedCurrencies)
         {
             // validate the input parameters
+            BaseCurrencySymbol = BaseCurrencySymbol.ToUpper();
+            TargetedCurrencies = TargetedCurrencies.Select(e => e.ToUpper()).ToArray();
             if (!supportedCurrencies.Contains(BaseCurrencySymbol))
                 throw new InvalidRequestException($"{BaseCurrencySymbol} is Unsupported currency");
             if (TargetedCurrencies == null || TargetedCurrencies.Length == 0)
@@ -76,9 +78,9 @@ namespace App.Components.ExchangeratesApiClient
                 var exchangeratesAPIResponse = await SendRequestAsync(string.Empty);
                 if (exchangeratesAPIResponse?.Rates?.Count > 0)
                 {
-                    supportedCurrencies =new HashSet<string>(exchangeratesAPIResponse.Rates.Keys);
-                    if (!supportedCurrencies.Contains(exchangeratesAPIResponse.BaseCurrency))
-                        supportedCurrencies.Add(exchangeratesAPIResponse.BaseCurrency);
+                    supportedCurrencies =new HashSet<string>(exchangeratesAPIResponse.Rates.Keys.Select(e => e.ToUpper()));
+                    if (!supportedCurrencies.Contains(exchangeratesAPIResponse.BaseCurrency.ToUpper()))
+                        supportedCurrencies.Add(exchangeratesAPIResponse.BaseCurrency.ToUpper());
                 }
             }
             catch (Exception ex)
@@ -87,7 +89,7 @@ namespace App.Components.ExchangeratesApiClient
                 _logger.LogErrorDetails(ex);
                 if (_config.SupportedCurrencies?.Count > 0)
                 {
-                    supportedCurrencies =new HashSet<string>(_config.SupportedCurrencies);
+                    supportedCurrencies =new HashSet<string>(_config.SupportedCurrencies.Select(e=>e.ToUpper()));
                     return supportedCurrencies;
                 }
                 throw new Exception("SupportedCurrencies Attribute is missing in the Config");

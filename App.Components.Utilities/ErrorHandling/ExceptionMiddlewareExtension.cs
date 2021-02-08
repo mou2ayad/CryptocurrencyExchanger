@@ -13,26 +13,20 @@ namespace App.Components.Utilities.ErrorHandling
 {
     public static class ExceptionMiddlewareExtention
     {
-       public static void ConfigurErrorHandler(this IApplicationBuilder app, ILogger log, string AppName,IConfiguration config)
+        public static void ConfigurErrorHandler(this IApplicationBuilder app, ILogger log, string AppName, bool IsDevelopment)
         {
             app.UseExceptionHandler(appError => {
                 appError.Run(async context => {
-                  
+
                     context.Response.ContentType = "application/json";
                     var contextFeature = context.Features.Get<IExceptionHandlerFeature>();
-                    if (contextFeature!=null)
+                    if (contextFeature != null)
                     {
                         Exception exception = contextFeature.Error;
                         if (contextFeature.Error is AggregateException)
                             exception = exception.InnerException;
                         HttpExceptionDetails errorDetails;
-                        if (exception is RestAPIException)
-                        {
-                            var restapiException = exception as RestAPIException;
-                            errorDetails = restapiException.ExceptionDetails;
-                            context.Response.StatusCode = restapiException.ExceptionDetails.StatusCode;
-                        }
-                        else if (exception.IsClientException())
+                        if (exception.IsClientException())
                         {
                             context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
                             errorDetails = new HttpExceptionDetails()
@@ -42,8 +36,8 @@ namespace App.Components.Utilities.ErrorHandling
                             };
                         }
                         else
-                        {                           
-                        
+                        {
+
                             context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
                             errorDetails = new HttpExceptionDetails()
                             {
@@ -51,13 +45,13 @@ namespace App.Components.Utilities.ErrorHandling
                                 ErrorMessage = "Internal Server Error"
                             };
 
-                        }                      
+                        }
 
-                        if (config.GetValue<string>("GlobalFramework:EnvType")!= "Prod")
+                        if (IsDevelopment)
                             errorDetails.ErrorMessage = exception.ToString();
-                        
-                        if(exception.IsWithNoLog())                     
-                            errorDetails.WithNolog();                        
+
+                        if (exception.IsWithNoLog())
+                            errorDetails.WithNolog();
                         else
                         {
                             var Parameters = JsonConvert.SerializeObject(context.Request.Query.ToDictionary(x => x.Key, x => x.Value.ToString()));
@@ -70,7 +64,7 @@ namespace App.Components.Utilities.ErrorHandling
                                 log.LogError(exception, "ErorrCode:{0} Service:{1} Path:{2} Parameters:{3}\n Exception=> ", errorDetails.ErrorCode, AppName, context.Request.Path.Value, Parameters);
 
                             }
-                               
+
                         }
                         await context.Response.WriteAsync(errorDetails.ToString());
                     }

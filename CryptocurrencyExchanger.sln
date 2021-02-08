@@ -7,15 +7,17 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "App.Services.Cryptocurrency
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "App.Components.Utilities", "App.Components.Utilities\App.Components.Utilities.csproj", "{591D8F1A-9823-4C46-A33F-B4F18621FBE8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "App.Components.Contracts", "App.Components.Contracts\App.Components.Contracts.csproj", "{730A2AB2-78F8-487B-86C4-2814F4E6570F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "App.Components.Contracts", "App.Components.Contracts\App.Components.Contracts.csproj", "{730A2AB2-78F8-487B-86C4-2814F4E6570F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "App.Components.ExchangeratesApiClient", "App.Components.ExchangeratesApiClient\App.Components.ExchangeratesApiClient.csproj", "{09630190-F1AA-427D-9736-906B0F1CFF55}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "App.Components.ExchangeratesApiClient", "App.Components.ExchangeratesApiClient\App.Components.ExchangeratesApiClient.csproj", "{09630190-F1AA-427D-9736-906B0F1CFF55}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "App.Testing.ExchangeratesAPIClientTest", "App.Testing.ExchangeratesAPIClientTest\App.Testing.ExchangeratesAPIClientTest.csproj", "{2A1C900A-6E6B-4A5C-A68D-2CF40B170566}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "App.Testing.ExchangeratesAPIClientTest", "App.Testing.ExchangeratesAPIClientTest\App.Testing.ExchangeratesAPIClientTest.csproj", "{2A1C900A-6E6B-4A5C-A68D-2CF40B170566}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "App.Components.CoinmarketcapApiClient", "App.Components.CoinmarketcapApiClient\App.Components.CoinmarketcapApiClient.csproj", "{885C5B14-CDBC-417C-A1E7-0A0E769C8EB4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "App.Components.CoinmarketcapApiClient", "App.Components.CoinmarketcapApiClient\App.Components.CoinmarketcapApiClient.csproj", "{885C5B14-CDBC-417C-A1E7-0A0E769C8EB4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "App.Testing.CoinmarketcapAPIClientTest", "App.Testing.CoinmarketcapAPIClientTest\App.Testing.CoinmarketcapAPIClientTest.csproj", "{BBDA3846-02F3-4B6A-9880-D29A8D5B9580}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "App.Testing.CoinmarketcapAPIClientTest", "App.Testing.CoinmarketcapAPIClientTest\App.Testing.CoinmarketcapAPIClientTest.csproj", "{BBDA3846-02F3-4B6A-9880-D29A8D5B9580}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "App.Testing.CryptocurrencyExchangerAPITest", "App.Testing.CryptocurrencyExchangerAPITest\App.Testing.CryptocurrencyExchangerAPITest.csproj", "{E4BF6A00-2EBF-40B2-87FC-7BF6C549AC02}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -51,6 +53,10 @@ Global
 		{BBDA3846-02F3-4B6A-9880-D29A8D5B9580}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BBDA3846-02F3-4B6A-9880-D29A8D5B9580}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BBDA3846-02F3-4B6A-9880-D29A8D5B9580}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E4BF6A00-2EBF-40B2-87FC-7BF6C549AC02}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E4BF6A00-2EBF-40B2-87FC-7BF6C549AC02}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E4BF6A00-2EBF-40B2-87FC-7BF6C549AC02}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E4BF6A00-2EBF-40B2-87FC-7BF6C549AC02}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
