@@ -12,6 +12,7 @@ namespace App.Testing.CryptocurrencyExchangerAPITest.IntegrationTest
 {
     public static class AppClientFactory
     {
+
         private static WebApplicationFactory<Startup>  appFactory = new WebApplicationFactory<Startup>();
         public static HttpClient GetClient() => appFactory.CreateClient();
        

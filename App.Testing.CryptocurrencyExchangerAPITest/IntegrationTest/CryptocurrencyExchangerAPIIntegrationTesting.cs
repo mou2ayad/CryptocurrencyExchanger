@@ -55,7 +55,7 @@ namespace App.Testing.CryptocurrencyExchangerAPITest.IntegrationTest
             response.IsSuccessStatusCode.Should().BeFalse();
             response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             ErrorMessage.StatusCode.Should().Be(400);
-            ErrorMessage.ErrorMessage.Should().Be("SYB is invalid or Unsupported Cryptocurrency");           
+            ErrorMessage.ErrorMessage.Should().Contain("SYB is invalid or Unsupported Cryptocurrency");           
 
         }
 

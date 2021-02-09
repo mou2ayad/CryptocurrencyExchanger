@@ -46,7 +46,7 @@ namespace App.Components.Utilities.ErrorHandling
 
                         }
 
-                        if (IsDevelopment)
+                        if (IsDevelopment && !exception.IsClientException())
                             errorDetails.ErrorMessage = exception.ToString();
 
                         if (exception.IsWithNoLog())
