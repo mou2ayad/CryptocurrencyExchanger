@@ -6,7 +6,7 @@ using NLog;
 using System;
 
 
-namespace CryptocurrencyExchanger
+namespace App.Services.CryptocurrencyExchangerAPI
 {
     public class Program
     {

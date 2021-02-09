@@ -5,7 +5,6 @@ using FluentAssertions;
 using App.Components.Utilities.CustomException;
 using System.Linq;
 using System.Collections.Generic;
-using App.Components.Utilities.APIClient;
 using Microsoft.Extensions.Caching.Memory;
 
 namespace App.Testing.CoinmarketcapAPIClientTest
@@ -14,13 +13,13 @@ namespace App.Testing.CoinmarketcapAPIClientTest
     {
       
         private readonly string appsettingName = "appsettings.json";
-        private ServiceProvider serviceProvider => ServiceProviderFactory.Get(appsettingName);
+        private ServiceProvider ServiceProvider => ServiceProviderFactory.Get(appsettingName);
      
         [Fact]
         public void TestLoadSupportedCurrencies()
         {
             // Act 
-            var resutls = serviceProvider.GetCoinmarketcapAPIProviderService().LoadSupportedCurrencies().Result;
+            var resutls = ServiceProvider.GetCoinmarketcapAPIProviderService().LoadSupportedCurrencies().Result;
 
             // Assert  
             resutls.Should().NotBeNullOrEmpty();
@@ -31,7 +30,7 @@ namespace App.Testing.CoinmarketcapAPIClientTest
             // Arrange 
 
             // Act 
-            var config = serviceProvider.GetCoinmarketcapAPIConfiguration().Value;
+            var config = ServiceProvider.GetCoinmarketcapAPIConfiguration().Value;
 
             // Assert  
             config.Should().NotBeNull();
@@ -51,7 +50,7 @@ namespace App.Testing.CoinmarketcapAPIClientTest
             string BaseCryptoCurrencySymbol = "SYP";
 
             // Act 
-            Action act =  () => serviceProvider.GetCoinmarketcapAPIProviderService().GetExchangeRatesList(BaseCryptoCurrencySymbol).Wait();
+            Action act =  () => ServiceProvider.GetCoinmarketcapAPIProviderService().GetExchangeRatesList(BaseCryptoCurrencySymbol).Wait();
 
             // Assert  
             act.Should().Throw<InvalidRequestException>()
@@ -65,7 +64,7 @@ namespace App.Testing.CoinmarketcapAPIClientTest
             string[] targetedCurencies = { "EUR", "USD" };
 
             // Act 
-            var results = serviceProvider.GetCoinmarketcapAPIProviderService().GetExchangeRatesList(BaseCurrencyCryptoSymbol, targetedCurencies).Result;
+            var results = ServiceProvider.GetCoinmarketcapAPIProviderService().GetExchangeRatesList(BaseCurrencyCryptoSymbol, targetedCurencies).Result;
 
             // Assert  
             // check if the baseCurrencyIn the response equal the input BaseCurrencyCryptoSymbol
@@ -89,7 +88,7 @@ namespace App.Testing.CoinmarketcapAPIClientTest
             string[] targetedCurencies = { "eur", "usd" };
 
             // Act 
-            var results = serviceProvider.GetCoinmarketcapAPIProviderService().GetExchangeRatesList(BaseCurrencySymbol, targetedCurencies).Result;
+            var results = ServiceProvider.GetCoinmarketcapAPIProviderService().GetExchangeRatesList(BaseCurrencySymbol, targetedCurencies).Result;
 
             // Assert  
             // check if the baseCurrencyIn the response equal the input BaseCurrencySymbol
@@ -109,11 +108,11 @@ namespace App.Testing.CoinmarketcapAPIClientTest
         {
             // Arrange 
             string BaseCurrencyCryptoSymbol = "BTC";
-            var config = serviceProvider.GetCoinmarketcapAPIConfiguration().Value;
+            var config = ServiceProvider.GetCoinmarketcapAPIConfiguration().Value;
             List<string> targetedCurencies =config.DefaultTargetedCurrencies;
 
             // Act 
-            var results = serviceProvider.GetCoinmarketcapAPIProviderService().GetExchangeRatesList(BaseCurrencyCryptoSymbol).Result;
+            var results = ServiceProvider.GetCoinmarketcapAPIProviderService().GetExchangeRatesList(BaseCurrencyCryptoSymbol).Result;
 
             // Assert  
             // check if the baseCurrencyIn the response equal the input BaseCurrencyCryptoSymbol
@@ -137,7 +136,7 @@ namespace App.Testing.CoinmarketcapAPIClientTest
             string[] targetedCurencies = { "OOKS", "SYP" };
 
             // Act
-            Action act = () => serviceProvider.GetCoinmarketcapAPIProviderService().GetExchangeRatesList(BaseCurrencySymbol, targetedCurencies).Wait();
+            Action act = () => ServiceProvider.GetCoinmarketcapAPIProviderService().GetExchangeRatesList(BaseCurrencySymbol, targetedCurencies).Wait();
 
             // Assert  
             act.Should().Throw<InvalidRequestException>()
@@ -152,7 +151,7 @@ namespace App.Testing.CoinmarketcapAPIClientTest
             string[] targetedCurencies = { "OOKS", "SYP","EUR" };
 
             // Act
-            var results = serviceProvider.GetCoinmarketcapAPIProviderService().GetExchangeRatesList(BaseCryptoCurrencySymbol, targetedCurencies).Result;
+            var results = ServiceProvider.GetCoinmarketcapAPIProviderService().GetExchangeRatesList(BaseCryptoCurrencySymbol, targetedCurencies).Result;
 
             // Assert  
             results.Should().NotBeNull();
@@ -166,7 +165,7 @@ namespace App.Testing.CoinmarketcapAPIClientTest
             string BaseCryptoCurrencySymbol = "BTC";
             string[] targetedCurencies = { "EUR", "USD" };
             //var serviceProvider = new ServiceProvider(appsettingName);
-            var cache = serviceProvider.GetService<IMemoryCache>();
+            var cache = ServiceProvider.GetService<IMemoryCache>();
             // create a cache key for one of the currencies 
             string key = $"coinmarketcapapi_btc_usd";
             //removing the key from the cache in case it is there
@@ -179,7 +178,7 @@ namespace App.Testing.CoinmarketcapAPIClientTest
 
             // Act 
             // get the currency from the provider
-            var results = serviceProvider.GetCoinmarketcapAPIProviderService().GetExchangeRatesList(BaseCryptoCurrencySymbol, targetedCurencies).Result;
+            var results = ServiceProvider.GetCoinmarketcapAPIProviderService().GetExchangeRatesList(BaseCryptoCurrencySymbol, targetedCurencies).Result;
 
             // Assert  
             // ensure that the value is not saved in the cache

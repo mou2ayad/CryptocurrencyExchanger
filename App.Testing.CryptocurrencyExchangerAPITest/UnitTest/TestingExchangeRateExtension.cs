@@ -1,5 +1,5 @@
 using App.Components.Contracts.Models;
-using App.Services.CryptocurrencyExchangerAPI.Extensions;
+using App.CryptocurrencyExchangerAPI.Extensions;
 using FluentAssertions;
 using System;
 using System.Collections.Generic;
@@ -13,10 +13,12 @@ namespace App.Testing.CryptocurrencyExchangerAPITest
         public void TestAppendingNULLExchangeRate()
         {
             //Arrange
-            var firstRateList = new Dictionary<string, decimal>();
-            firstRateList.Add("BRL", (decimal)39471.159);
-            firstRateList.Add("EUR", (decimal)8708.442);
-            firstRateList.Add("USD", (decimal)9558.551);
+            var firstRateList = new Dictionary<string, decimal>
+            {
+                { "BRL", (decimal)39471.159 },
+                { "EUR", (decimal)8708.442 },
+                { "USD", (decimal)9558.551 }
+            };
             var mainExchageRate = new ExchangeRatesList() { BaseCurrencySymbol = "BTC", CurrenciesRates = new Dictionary<string, decimal>(firstRateList) };            
 
             //Act
@@ -34,10 +36,12 @@ namespace App.Testing.CryptocurrencyExchangerAPITest
         public void TestAppendingEmptyExchangeRate()
         {
             //Arrange
-            var firstRateList = new Dictionary<string, decimal>();
-            firstRateList.Add("BRL", (decimal)39471.159);
-            firstRateList.Add("EUR", (decimal)8708.442);
-            firstRateList.Add("USD", (decimal)9558.551);
+            var firstRateList = new Dictionary<string, decimal>
+            {
+                { "BRL", (decimal)39471.159 },
+                { "EUR", (decimal)8708.442 },
+                { "USD", (decimal)9558.551 }
+            };
             var mainExchageRate = new ExchangeRatesList() { BaseCurrencySymbol = "BTC", CurrenciesRates = new Dictionary<string, decimal>(firstRateList) };
             var SecondExchageRate = new ExchangeRatesList() { BaseCurrencySymbol = "EUR" };
 
@@ -57,18 +61,22 @@ namespace App.Testing.CryptocurrencyExchangerAPITest
         public void TestAppendingExchangeRateWithBaseCurrencyNotInMainListCurrenciesRates()
         {
             //Arrange
-            var firstRateList = new Dictionary<string, decimal>();
-            firstRateList.Add("BRL", (decimal)39471.159);
-            firstRateList.Add("EUR", (decimal)8708.442);
-            firstRateList.Add("USD", (decimal)9558.551);
+            var firstRateList = new Dictionary<string, decimal>
+            {
+                { "BRL", (decimal)39471.159 },
+                { "EUR", (decimal)8708.442 },
+                { "USD", (decimal)9558.551 }
+            };
             var mainExchageRate = new ExchangeRatesList() { BaseCurrencySymbol = "BTC", CurrenciesRates = new Dictionary<string, decimal>(firstRateList) };
 
             //Act
-            var SecondRateList = new Dictionary<string, decimal>();
-            SecondRateList.Add("CAD", (decimal)1.5344);
-            SecondRateList.Add("HKD", (decimal)9.29);
-            SecondRateList.Add("AUD", (decimal)1.5761);
-            SecondRateList.Add("USD", (decimal)1.1983);
+            var SecondRateList = new Dictionary<string, decimal>
+            {
+                { "CAD", (decimal)1.5344 },
+                { "HKD", (decimal)9.29 },
+                { "AUD", (decimal)1.5761 },
+                { "USD", (decimal)1.1983 }
+            };
             var SecondExchageRate = new ExchangeRatesList() { BaseCurrencySymbol = "MYR", CurrenciesRates = new Dictionary<string, decimal>(SecondRateList) };
 
             //Assert
@@ -80,10 +88,12 @@ namespace App.Testing.CryptocurrencyExchangerAPITest
         public void TestAppendingExchangeRate_WithEmptyAppendedList()
         {
             //Arrange
-            var firstRateList = new Dictionary<string, decimal>();
-            firstRateList.Add("BRL", (decimal)39471.159);
-            firstRateList.Add("EUR", (decimal)8708.442);
-            firstRateList.Add("USD", (decimal)9558.551);
+            var firstRateList = new Dictionary<string, decimal>
+            {
+                { "BRL", (decimal)39471.159 },
+                { "EUR", (decimal)8708.442 },
+                { "USD", (decimal)9558.551 }
+            };
             var mainExchageRate = new ExchangeRatesList() { BaseCurrencySymbol = "BTC", CurrenciesRates = new Dictionary<string, decimal>(firstRateList) };
             var SecondExchageRate = new ExchangeRatesList() { BaseCurrencySymbol = "EUR" };
 
@@ -102,17 +112,21 @@ namespace App.Testing.CryptocurrencyExchangerAPITest
         public void TestAppendingExchangeRate_WithoutOverwrite()
         {
             //Arrange
-            var firstRateList = new Dictionary<string, decimal>();
-            firstRateList.Add("BRL",(decimal)39471.159);
-            firstRateList.Add("EUR", (decimal)8708.442);
-            firstRateList.Add("USD", (decimal)9558.551);
+            var firstRateList = new Dictionary<string, decimal>
+            {
+                { "BRL", (decimal)39471.159 },
+                { "EUR", (decimal)8708.442 },
+                { "USD", (decimal)9558.551 }
+            };
             var mainExchageRate = new ExchangeRatesList() { BaseCurrencySymbol = "BTC", CurrenciesRates =new Dictionary<string, decimal>(firstRateList) };
 
-            var SecondRateList = new Dictionary<string, decimal>();
-            SecondRateList.Add("CAD", (decimal)1.5344);
-            SecondRateList.Add("HKD", (decimal)9.29);
-            SecondRateList.Add("AUD", (decimal)1.5761);
-            SecondRateList.Add("USD", (decimal)1.1983);
+            var SecondRateList = new Dictionary<string, decimal>
+            {
+                { "CAD", (decimal)1.5344 },
+                { "HKD", (decimal)9.29 },
+                { "AUD", (decimal)1.5761 },
+                { "USD", (decimal)1.1983 }
+            };
             var SecondExchageRate = new ExchangeRatesList() { BaseCurrencySymbol = "EUR", CurrenciesRates = new Dictionary<string, decimal>(SecondRateList) };
 
             //Act
@@ -130,17 +144,21 @@ namespace App.Testing.CryptocurrencyExchangerAPITest
         public void TestAppendingExchangeRate_WithOverwrite()
         {
             //Arrange
-            var firstRateList = new Dictionary<string, decimal>();
-            firstRateList.Add("BRL", (decimal)39471.159);
-            firstRateList.Add("EUR", (decimal)8708.442);
-            firstRateList.Add("USD", (decimal)9558.551);
+            var firstRateList = new Dictionary<string, decimal>
+            {
+                { "BRL", (decimal)39471.159 },
+                { "EUR", (decimal)8708.442 },
+                { "USD", (decimal)9558.551 }
+            };
             var mainExchageRate = new ExchangeRatesList() { BaseCurrencySymbol = "BTC", CurrenciesRates = new Dictionary<string, decimal>(firstRateList) };
 
-            var SecondRateList = new Dictionary<string, decimal>();
-            SecondRateList.Add("CAD", (decimal)1.5344);
-            SecondRateList.Add("HKD", (decimal)9.29);
-            SecondRateList.Add("AUD", (decimal)1.5761);
-            SecondRateList.Add("USD", (decimal)1.3);
+            var SecondRateList = new Dictionary<string, decimal>
+            {
+                { "CAD", (decimal)1.5344 },
+                { "HKD", (decimal)9.29 },
+                { "AUD", (decimal)1.5761 },
+                { "USD", (decimal)1.3 }
+            };
             var SecondExchageRate = new ExchangeRatesList() { BaseCurrencySymbol = "EUR", CurrenciesRates = new Dictionary<string, decimal>(SecondRateList) };
 
             //Act

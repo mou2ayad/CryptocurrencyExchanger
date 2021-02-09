@@ -1,9 +1,7 @@
 ﻿using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System;
-using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
 using System.Security.Claims;
 using System.Text;
 
@@ -14,7 +12,6 @@ namespace App.Components.Utilities.JWT_Auth
     public abstract class UserService : IUserService
     {
         
-
         private readonly JWTSettings _jwtSettings;
 
         public UserService(IOptions<JWTSettings> jwtSettings)
@@ -30,11 +27,11 @@ namespace App.Components.Utilities.JWT_Auth
             if (user == null) return null;
             
             DateTime TokenExpiryDate;
-            var token = generateJwtToken(user, out TokenExpiryDate);
+            var token = GenerateJwtToken(user, out TokenExpiryDate);
 
             return new AuthenticateResponse(token, TokenExpiryDate);
         }
-        private string generateJwtToken(UserClient user,out DateTime TokenExpiryDate)
+        private string GenerateJwtToken(UserClient user,out DateTime TokenExpiryDate)
         {           
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(_jwtSettings.SecretKey);

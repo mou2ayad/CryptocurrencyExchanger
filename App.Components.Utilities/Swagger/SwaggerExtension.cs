@@ -14,8 +14,8 @@ namespace App.Components.Utilities.DependencyInjection
                 OpenApiInfo swaggerDoc = new OpenApiInfo()
                 {
                     Title = APITitle,
-                    Version = configuration.GetValue<string>("Swagger:Version") ?? "v1",
-                    Description = configuration.GetValue<string>("Swagger:Description") ?? APITitle + " Description"
+                    Version = configuration.GetValue<string>("Swagger:Version") ,
+                    Description = configuration.GetValue<string>("Swagger:Description") 
                 };
                 if (configuration.GetSection("Swagger:Contact").Exists())
                 {
@@ -23,8 +23,8 @@ namespace App.Components.Utilities.DependencyInjection
                     Uri.TryCreate(configuration.GetValue<string>("Swagger:Contact:Url"), UriKind.Absolute, out uri);
                     swaggerDoc.Contact = new OpenApiContact()
                     {
-                        Name = configuration.GetValue<string>("Swagger:Contact:Name") ?? "Mouayad Khashfeh",
-                        Email = configuration.GetValue<string>("Swagger:Contact:Email") ?? "Mou2ayad@Gmail.com",
+                        Name = configuration.GetValue<string>("Swagger:Contact:Name") ,
+                        Email = configuration.GetValue<string>("Swagger:Contact:Email"),
                         Url = uri
                     };
                 }

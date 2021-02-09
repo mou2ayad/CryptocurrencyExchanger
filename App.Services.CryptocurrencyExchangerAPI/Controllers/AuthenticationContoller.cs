@@ -1,7 +1,8 @@
 ﻿using App.Components.Utilities.JWT_Auth;
 using Microsoft.AspNetCore.Mvc;
 
-namespace CryptocurrencyExchanger.Controllers
+
+namespace App.CryptocurrencyExchanger.Controllers
 {   
     [ApiController]   
     public class AuthenticationContoller : ControllerBase
@@ -12,7 +13,7 @@ namespace CryptocurrencyExchanger.Controllers
             var response = userService.Authenticate(model);
 
             if (response == null)
-                return BadRequest(new { message = "Username or password is incorrect" });
+                return Unauthorized(new { message = "Username or password is incorrect" });
 
             return Ok(response);
         }

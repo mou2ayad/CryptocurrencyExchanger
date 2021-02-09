@@ -31,7 +31,7 @@ namespace App.Testing.CryptocurrencyExchangerAPITest
     }
     public class ServiceProvider
     {
-        private IConfiguration configuration { get; set; }
+        private IConfiguration Configuration { get; set; }
         private IServiceProvider _serviceProvider { set; get; }
         public  ServiceProvider(string appsettingsFileName)
         {
@@ -40,7 +40,7 @@ namespace App.Testing.CryptocurrencyExchangerAPITest
               .AddUserSecrets("05bf9c07-fc4d-41d9-b305-5bd50c1e211b")
               .Build();
 
-            configuration = config;
+            Configuration = config;
             _serviceProvider = GetServiceProvider();
 
         }
@@ -50,10 +50,10 @@ namespace App.Testing.CryptocurrencyExchangerAPITest
         private IServiceProvider GetServiceProvider()
         {
             ServiceCollection services = new ServiceCollection();
-            services.AddSingleton<IConfiguration>(configuration);
+            services.AddSingleton<IConfiguration>(Configuration);
             services.AddMemoryCache();
             services.AddOptions();
-            services.InjectCryptocurrencyProviderService(configuration);
+            services.InjectCryptocurrencyProviderService(Configuration);
             return services.BuildServiceProvider();
         }
 

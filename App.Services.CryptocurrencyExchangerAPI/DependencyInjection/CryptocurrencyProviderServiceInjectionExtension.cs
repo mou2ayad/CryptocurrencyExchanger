@@ -1,14 +1,11 @@
 ﻿using App.Components.CoinmarketcapApiClient.DependencyInjection;
-using App.Components.Contracts.Contracts;
 using App.Components.ExchangeratesApiClient.DependencyInjection;
 using App.Services.CryptocurrencyExchangerAPI.Models;
 using App.Services.CryptocurrencyExchangerAPI.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+
 
 namespace App.Services.CryptocurrencyExchangerAPI.DependencyInjection
 {

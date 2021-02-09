@@ -25,39 +25,20 @@ namespace App.Components.Utilities.RecurringJobs
             {
                 _recurringJobManager.AddOrUpdate(JobUniqueName, Job, cronExpression);
                 if(JobsList.Contains(JobUniqueName))                                    
-                    _logger.LogInformation("RecurringJobService => Job:{0} has been updated in EC2 {2} with this CronExpression({1}) ", JobUniqueName, cronExpression);                
+                    _logger.LogInformation("RecurringJobService => Job:{0} has been updated with this CronExpression({1}) ", JobUniqueName, cronExpression);                
                 else
                 {
                     JobsList.Add(JobUniqueName);
-                    _logger.LogInformation("RecurringJobService => Job:{0} has been created in EC2 {2} with this CronExpression({1})", JobUniqueName, cronExpression);
+                    _logger.LogInformation("RecurringJobService => Job:{0} has been created  with this CronExpression({1})", JobUniqueName, cronExpression);
                 }
                 
             }
             catch(Exception ex)
             {
-                _logger.LogError(ex, "RecurringJobService => Failed to create Job:{0} in EC2 {2} with this CronExpression({1})", JobUniqueName, cronExpression);
+                _logger.LogError(ex, "RecurringJobService => Failed to create Job:{0} with this CronExpression({1})", JobUniqueName, cronExpression);
             }
             
-        }
-
-        public void RemoveIfExists(string JobUniqueName)
-        {
-            try
-            {
-                _recurringJobManager.RemoveIfExists(JobUniqueName);
-                if (JobsList.Contains(JobUniqueName))
-                {
-                    JobsList.Remove(JobUniqueName);
-                    _logger.LogInformation("RecurringJobService => Job:{0} has been Removed from RecurringJobService", JobUniqueName);
-                }
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "RecurringJobService => Failed to Remove Job:{0} from RecurringJobService", JobUniqueName);
-            }                    
-            
-        }
-
+        }       
        
     }
 }

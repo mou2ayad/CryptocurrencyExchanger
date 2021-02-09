@@ -1,9 +1,8 @@
 ﻿using App.Components.Contracts.Contracts;
 using App.Components.Contracts.Models;
-using App.Services.CryptocurrencyExchangerAPI.Extensions;
+using App.CryptocurrencyExchangerAPI.Extensions;
 using App.Services.CryptocurrencyExchangerAPI.Models;
 using Microsoft.Extensions.Options;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -41,7 +40,7 @@ namespace App.Services.CryptocurrencyExchangerAPI.Services
             .GetExchangeRatesList(BaseCryptocurrencySymbol, _options.MainCryptocurrencyProvider.TargetedCurrencies.ToArray());
             
 
-        private IExchangeRatesProvider GetProvider(string ProviderName)
+        public IExchangeRatesProvider GetProvider(string ProviderName)
             => _exchangeRatesProviders.FirstOrDefault(e => e.ServiceProviderName == ProviderName);
         
     }

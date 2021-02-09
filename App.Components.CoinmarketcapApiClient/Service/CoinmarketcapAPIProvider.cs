@@ -2,7 +2,6 @@
 using App.Components.Contracts.Models;
 using App.Components.CoinmarketcapApiClient.Config;
 using App.Components.CoinmarketcapApiClient.Model;
-using App.Components.Utilities.APIClient;
 using App.Components.Utilities.CustomException;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
@@ -14,6 +13,7 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Linq;
 using Microsoft.Extensions.Logging;
+using App.Components.Utilities.ErrorHandling;
 
 namespace App.Components.CoinmarketcapApiClient
 {
@@ -109,7 +109,7 @@ namespace App.Components.CoinmarketcapApiClient
                    )
                 {
                     CryptocurrencyComparer CryptoCurenciesComparer = new CryptocurrencyComparer();
-                    supportedCryptoCurrencies = CoinmarketcapAPIMapResponse.Data.Distinct(CryptoCurenciesComparer).ToDictionary(k => k.Symbol.ToUpper(), v => v.Id);
+                    supportedCryptoCurrencies = CoinmarketcapAPIMapResponse.Data.Distinct(CryptoCurenciesComparer).ToDictionary(k => k.Symbol, v => v.Id);
                     return supportedCryptoCurrencies.Keys as ICollection<string>;
                 }
             }

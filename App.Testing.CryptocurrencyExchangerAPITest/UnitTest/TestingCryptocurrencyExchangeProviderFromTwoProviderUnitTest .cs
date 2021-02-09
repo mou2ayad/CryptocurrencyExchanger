@@ -10,33 +10,31 @@ namespace App.Testing.CryptocurrencyExchangerAPITest.UnitTest
     public class TestingCryptocurrencyExchangeProviderFromTwoProviderUnitTest
     {
         private readonly string appsettingName = "appsettingsTwoProviders.json";
-        private ServiceProvider serviceProvider => ServiceProviderFactory.Get(appsettingName);
+        private ServiceProvider ServiceProvider => ServiceProviderFactory.Get(appsettingName);
         [Fact]
         public void TestLoadConfigurationTwoProvider()
         {
             // Arrange 
 
             // Act 
-            var config = serviceProvider.GetExchangeratesAPIConfiguration().Value;
+            var config = ServiceProvider.GetExchangeratesAPIConfiguration().Value;
 
             // Assert  
             config.Should().NotBeNull();
             config.MainCryptocurrencyProvider.Should().NotBeNull();
             config.MainCryptocurrencyProvider.Name.Should().NotBeNullOrEmpty();
-            config.MainCryptocurrencyProvider.RefreshCurrenyMapInSeconds.Should().BeGreaterThan(0);
             config.MainCryptocurrencyProvider.TargetedCurrencies.Should().HaveCountGreaterThan(0);
 
             config.AdditionalFiatCurrencyProvider.Should().NotBeNull();
             config.AdditionalFiatCurrencyProvider.Name.Should().NotBeNullOrEmpty();
-            config.AdditionalFiatCurrencyProvider.RefreshCurrenyMapInSeconds.Should().BeGreaterThan(0);
             config.AdditionalFiatCurrencyProvider.TargetedCurrencies.Should().HaveCountGreaterThan(0);
         }
         [Fact]
         public void TestRequestExchangeRateFromTwoProvider()
         {
             // Arrange 
-            var provider = serviceProvider.GetCryptocurrencyExchangeProvider();
-            var config = serviceProvider.GetExchangeratesAPIConfiguration().Value;
+            var provider = ServiceProvider.GetCryptocurrencyExchangeProvider();
+            var config = ServiceProvider.GetExchangeratesAPIConfiguration().Value;
             
             // Act 
             var results = provider.GetExchangeRateListAsync("BTC").Result;

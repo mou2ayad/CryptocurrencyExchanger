@@ -2,7 +2,6 @@
 using App.Components.Contracts.Models;
 using App.Components.ExchangeratesApiClient.Config;
 using App.Components.ExchangeratesApiClient.Model;
-using App.Components.Utilities.APIClient;
 using App.Components.Utilities.CustomException;
 using App.Components.Utilities.Logger;
 using Microsoft.Extensions.Logging;

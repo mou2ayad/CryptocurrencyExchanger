@@ -5,7 +5,6 @@ using FluentAssertions;
 using App.Components.Utilities.CustomException;
 using System.Linq;
 using System.Collections.Generic;
-using App.Components.Utilities.APIClient;
 using Microsoft.Extensions.Caching.Memory;
 
 namespace App.Testing.ExchangeratesAPIClientTest
@@ -13,12 +12,12 @@ namespace App.Testing.ExchangeratesAPIClientTest
     public class ExchangeratesAPIClientUnitTestWithoutCaching
     {
         private readonly string appsettingName = "appsettings.json";
-        private ServiceProvider serviceProvider => ServiceProviderFactory.Get(appsettingName);
+        private ServiceProvider ServiceProvider => ServiceProviderFactory.Get(appsettingName);
         [Fact]
         public void TestLoadSupportedCurrencies()
         {
             // Act 
-            var resutls = serviceProvider.GetExchangeratesAPIProviderService().LoadSupportedCurrencies().Result;
+            var resutls = ServiceProvider.GetExchangeratesAPIProviderService().LoadSupportedCurrencies().Result;
 
             // Assert  
             resutls.Should().NotBeNullOrEmpty();
@@ -29,7 +28,7 @@ namespace App.Testing.ExchangeratesAPIClientTest
             // Arrange 
 
             // Act 
-            var config = serviceProvider.GetExchangeratesAPIConfiguration().Value;
+            var config = ServiceProvider.GetExchangeratesAPIConfiguration().Value;
 
             // Assert  
             config.Should().NotBeNull();
@@ -45,7 +44,7 @@ namespace App.Testing.ExchangeratesAPIClientTest
             string BaseCurrencySymbol = "SYP";
 
             // Act 
-            Action act =  () => serviceProvider.GetExchangeratesAPIProviderService().GetExchangeRatesList(BaseCurrencySymbol).Wait();
+            Action act =  () => ServiceProvider.GetExchangeratesAPIProviderService().GetExchangeRatesList(BaseCurrencySymbol).Wait();
 
             // Assert  
             act.Should().Throw<InvalidRequestException>()
@@ -59,7 +58,7 @@ namespace App.Testing.ExchangeratesAPIClientTest
             string[] targetedCurencies = { "EUR", "GBP" };
 
             // Act 
-            var results = serviceProvider.GetExchangeratesAPIProviderService().GetExchangeRatesList(BaseCurrencySymbol, targetedCurencies).Result;
+            var results = ServiceProvider.GetExchangeratesAPIProviderService().GetExchangeRatesList(BaseCurrencySymbol, targetedCurencies).Result;
 
             // Assert  
             // check if the baseCurrencyIn the response equal the input BaseCurrencySymbol
@@ -83,7 +82,7 @@ namespace App.Testing.ExchangeratesAPIClientTest
             string[] targetedCurencies = { "eur", "gbp" };
 
             // Act 
-            var results = serviceProvider.GetExchangeratesAPIProviderService().GetExchangeRatesList(BaseCurrencySymbol, targetedCurencies).Result;
+            var results = ServiceProvider.GetExchangeratesAPIProviderService().GetExchangeRatesList(BaseCurrencySymbol, targetedCurencies).Result;
 
             // Assert  
             // check if the baseCurrencyIn the response equal the input BaseCurrencySymbol
@@ -104,11 +103,11 @@ namespace App.Testing.ExchangeratesAPIClientTest
         {
             // Arrange 
             string BaseCurrencySymbol = "USD";
-            var config = serviceProvider.GetExchangeratesAPIConfiguration().Value;
+            var config = ServiceProvider.GetExchangeratesAPIConfiguration().Value;
             List<string> targetedCurencies =config.DefaultTargetedCurrencies;
 
             // Act 
-            var results = serviceProvider.GetExchangeratesAPIProviderService().GetExchangeRatesList(BaseCurrencySymbol).Result;
+            var results = ServiceProvider.GetExchangeratesAPIProviderService().GetExchangeRatesList(BaseCurrencySymbol).Result;
 
             // Assert  
             // check if the baseCurrencyIn the response equal the input BaseCurrencySymbol
@@ -132,7 +131,7 @@ namespace App.Testing.ExchangeratesAPIClientTest
             string[] targetedCurencies = { "OOKS", "SYP" };
 
             // Act
-            Action act = () => serviceProvider.GetExchangeratesAPIProviderService().GetExchangeRatesList(BaseCurrencySymbol, targetedCurencies).Wait();
+            Action act = () => ServiceProvider.GetExchangeratesAPIProviderService().GetExchangeRatesList(BaseCurrencySymbol, targetedCurencies).Wait();
 
             // Assert  
             act.Should().Throw<InvalidRequestException>()
@@ -147,7 +146,7 @@ namespace App.Testing.ExchangeratesAPIClientTest
             string[] targetedCurencies = { "OOKS", "SYP","EUR" };
 
             // Act
-            var results = serviceProvider.GetExchangeratesAPIProviderService().GetExchangeRatesList(BaseCurrencySymbol, targetedCurencies).Result;
+            var results = ServiceProvider.GetExchangeratesAPIProviderService().GetExchangeRatesList(BaseCurrencySymbol, targetedCurencies).Result;
 
             // Assert  
             results.Should().NotBeNull();
@@ -160,7 +159,7 @@ namespace App.Testing.ExchangeratesAPIClientTest
             // Arrange 
             string BaseCurrencySymbol = "USD";
             string[] targetedCurencies = { "EUR", "GBP" };
-            var cache = serviceProvider.GetService<IMemoryCache>();
+            var cache = ServiceProvider.GetService<IMemoryCache>();
             // create a cache key for one of the currencies 
             string key = $"exchangeratesapi.io_usd_eur";
             //removing the key from the cache in case it is there
@@ -173,7 +172,7 @@ namespace App.Testing.ExchangeratesAPIClientTest
 
             // Act 
             // get the currency from the provider
-            var results = serviceProvider.GetExchangeratesAPIProviderService().GetExchangeRatesList(BaseCurrencySymbol, targetedCurencies).Result;
+            var results = ServiceProvider.GetExchangeratesAPIProviderService().GetExchangeRatesList(BaseCurrencySymbol, targetedCurencies).Result;
 
             // Assert  
             // ensure that the value is not saved in the cache

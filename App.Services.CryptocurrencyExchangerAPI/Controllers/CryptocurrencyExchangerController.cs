@@ -1,13 +1,9 @@
 ﻿using App.Components.Utilities.JWT_Auth;
 using App.Services.CryptocurrencyExchangerAPI.Services;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
-namespace CryptocurrencyExchanger.Controllers
+namespace App.CryptocurrencyExchanger.Controllers
 {
     [ApiController]
     [Route("api/v1/cryptocurrency/[action]")]

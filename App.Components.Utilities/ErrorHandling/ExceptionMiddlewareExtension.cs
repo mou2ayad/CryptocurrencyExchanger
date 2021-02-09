@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using App.Components.Utilities.APIClient;
 using Newtonsoft.Json;
 
 namespace App.Components.Utilities.ErrorHandling

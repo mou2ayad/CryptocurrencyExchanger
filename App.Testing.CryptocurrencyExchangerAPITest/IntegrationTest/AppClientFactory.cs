@@ -1,9 +1,8 @@
 ﻿using App.Components.Utilities.JWT_Auth;
-using CryptocurrencyExchanger;
+using App.Services.CryptocurrencyExchangerAPI;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
@@ -11,15 +10,16 @@ using System.Threading.Tasks;
 
 namespace App.Testing.CryptocurrencyExchangerAPITest.IntegrationTest
 {
-    public class IntegrationTest
+    public static class AppClientFactory
     {
-        protected readonly HttpClient httpClient;
-        public IntegrationTest()
-        {
-            var appFactory = new WebApplicationFactory<Startup>();
-            httpClient = appFactory.CreateClient();
-        }
-        protected async Task Authentication(string UserName, string Password)
+        private static WebApplicationFactory<Startup>  appFactory = new WebApplicationFactory<Startup>();
+        public static HttpClient GetClient() => appFactory.CreateClient();
+       
+
+    }
+    public static class HttpClientAuthenticationExtension
+    {
+        public static async Task AuthenticationAsync(this HttpClient httpClient, string UserName, string Password)
         {
             string token;
             using (var request = new HttpRequestMessage(HttpMethod.Post, "api/authentication/token"))
@@ -36,13 +36,10 @@ namespace App.Testing.CryptocurrencyExchangerAPITest.IntegrationTest
                         var authResponse = JsonConvert.DeserializeObject<AuthenticateResponse>(responseString);
                         token = authResponse.Token;
                         httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", token);
-                        return;
-                    }
-                    throw new Exception("Unauthorized");
+                    }                   
                 }
             }
 
         }
-
     }
 }

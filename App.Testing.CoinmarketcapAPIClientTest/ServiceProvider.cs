@@ -31,7 +31,7 @@ namespace App.Testing.CoinmarketcapAPIClientTest
     }
     public class ServiceProvider 
     {
-        private IConfiguration configuration { get; set; }
+        private IConfiguration Configuration { get; set; }
         private IServiceProvider _serviceProvider { set; get; }
         public  ServiceProvider(string appsettingsFileName)
         {
@@ -40,7 +40,7 @@ namespace App.Testing.CoinmarketcapAPIClientTest
               .AddUserSecrets("2a7f1c18-2ad9-4ae1-8870-e8e6768192ad")
               .Build();
 
-            configuration = config;
+            Configuration = config;
             _serviceProvider = GetServiceProvider();
 
         }
@@ -50,10 +50,10 @@ namespace App.Testing.CoinmarketcapAPIClientTest
         private IServiceProvider GetServiceProvider()
         {
             ServiceCollection services = new ServiceCollection();
-            services.AddSingleton<IConfiguration>(configuration);
+            services.AddSingleton<IConfiguration>(Configuration);
             services.AddMemoryCache();
             services.AddOptions();
-            services.InjectCoinmarketcapAPIProviderService(configuration);
+            services.InjectCoinmarketcapAPIProviderService(Configuration);
             return services.BuildServiceProvider();
         }
 

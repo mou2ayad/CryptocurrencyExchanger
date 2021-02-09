@@ -29,12 +29,12 @@ namespace App.Components.Utilities.JWT_Auth
         {
             var splits = context.Request.Headers["Authorization"].FirstOrDefault()?.Split(' ');
             if(splits!=null && splits.Length==2 && splits[0].ToLower()=="bearer" && splits[1] != null)
-                attachUserToContext(context, splits[1]);
+                AttachUserToContext(context, splits[1]);
 
             await _next(context);
         }
 
-        private void attachUserToContext(HttpContext context, string token)
+        private void AttachUserToContext(HttpContext context, string token)
         {
             try
             {

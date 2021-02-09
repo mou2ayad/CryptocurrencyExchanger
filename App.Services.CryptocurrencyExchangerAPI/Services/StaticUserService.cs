@@ -12,9 +12,11 @@ namespace App.Services.CryptocurrencyExchangerAPI.Services
         private List<UserClient> _users;
         public StaticUserService(IOptions<JWTSettings> jwtSettings) : base(jwtSettings)
         {
-            _users = new List<UserClient>();
-            _users.Add(new UserClient { Id = 1, UserName = "knab", Password = "knab2021", Permissions = new List<string>() { "Quotes" } });
-            _users.Add(new UserClient { Id = 2, UserName = "test", Password = "test2021", Permissions = new List<string>() {  } });
+            _users = new List<UserClient>
+            {
+                new UserClient { Id = 1, UserName = "knab", Password = "knab2021", Permissions = new List<string>() { "Quotes" } },
+                new UserClient { Id = 2, UserName = "test", Password = "test2021", Permissions = new List<string>() { } }
+            };
 
 
         }

@@ -1,38 +1,26 @@
 ﻿using App.Components.Contracts.Models;
 using App.Components.Utilities.ErrorHandling;
-using App.Components.Utilities.JWT_Auth;
-using CryptocurrencyExchanger;
 using FluentAssertions;
-using Microsoft.AspNetCore.Mvc.Testing;
 using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
-using System.Text;
-using System.Threading;
+
 using System.Threading.Tasks;
 using Xunit;
 
 namespace App.Testing.CryptocurrencyExchangerAPITest.IntegrationTest
 {
-    public class CryptocurrencyExchangerControllerIntegrationTesting : IntegrationTest
-    {
-        
-        public CryptocurrencyExchangerControllerIntegrationTesting():base()
-        {
-            
-        }
-        
+    public class CryptocurrencyExchangerControllerIntegrationTesting 
+    {             
 
         [Fact]
         public async Task Testing_Quotes_With_Valid_InputAsync()
         {
             //Arrange
             string currencyInput = "BTC";
-            
-            await Authentication("knab","knab2021");
+            var httpClient = AppClientFactory.GetClient();
+            await httpClient.AuthenticationAsync("knab", "knab2021");
             var request = new HttpRequestMessage(HttpMethod.Get, $"api/v1/cryptocurrency/Quotes/{currencyInput}");
 
             //Act
@@ -54,7 +42,8 @@ namespace App.Testing.CryptocurrencyExchangerAPITest.IntegrationTest
         {
             //Arrange
             string currencyInput = "SYB";
-            await Authentication("knab", "knab2021");
+            var httpClient = AppClientFactory.GetClient();
+            await httpClient.AuthenticationAsync("knab", "knab2021");
             var request = new HttpRequestMessage(HttpMethod.Get, $"api/v1/cryptocurrency/Quotes/{currencyInput}");
 
             //Act
@@ -69,5 +58,81 @@ namespace App.Testing.CryptocurrencyExchangerAPITest.IntegrationTest
             ErrorMessage.ErrorMessage.Should().Be("SYB is invalid or Unsupported Cryptocurrency");           
 
         }
+
+        [Fact]
+        public async Task Testing_Quotes_Without_Authentication()
+        {
+            //Arrange
+            string currencyInput = "BTC";            
+            var request = new HttpRequestMessage(HttpMethod.Get, $"api/v1/cryptocurrency/Quotes/{currencyInput}");
+            var httpClient = AppClientFactory.GetClient();
+
+            //Act
+            var response = await httpClient.SendAsync(request);
+            var responseString = await response.Content.ReadAsStringAsync();
+            var exchangeRatesList = JsonConvert.DeserializeObject<ExchangeRatesList>(responseString);
+
+            //Assert
+            response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
+            responseString.Should().Contain("Unauthenticated  Access");
+            response.IsSuccessStatusCode.Should().BeFalse();
+            exchangeRatesList.Should().NotBeNull();
+            exchangeRatesList.BaseCurrencySymbol.Should().BeNull();
+            exchangeRatesList.CurrenciesRates.Should().BeEmpty();
+
+        }
+        [Fact]
+        public async Task Testing_Quotes_With_invalid_Authentication_Token()
+        {
+            //Arrange
+            string currencyInput = "BTC";
+            var request = new HttpRequestMessage(HttpMethod.Get, $"api/v1/cryptocurrency/Quotes/{currencyInput}");
+            var httpClient = AppClientFactory.GetClient();            
+            // add invalid bearer token value
+            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", "eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJTQnFKdmwzZ3dSWTBnaERob0p");
+
+
+            //Act
+
+            var response = await httpClient.SendAsync(request);
+            var responseString = await response.Content.ReadAsStringAsync();
+            var exchangeRatesList = JsonConvert.DeserializeObject<ExchangeRatesList>(responseString);
+
+            //Assert
+            response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
+            responseString.Should().Contain("Unauthenticated  Access");
+            response.IsSuccessStatusCode.Should().BeFalse();
+            exchangeRatesList.Should().NotBeNull();
+            exchangeRatesList.BaseCurrencySymbol.Should().BeNull();
+            exchangeRatesList.CurrenciesRates.Should().BeEmpty();
+
+        }
+
+        [Fact]
+        public async Task Testing_Quotes_With_Valid_Authentication_Token_But_Unauthorized_Access()
+        {
+            //Arrange
+            string currencyInput = "BTC";
+            var request = new HttpRequestMessage(HttpMethod.Get, $"api/v1/cryptocurrency/Quotes/{currencyInput}");
+            var httpClient = AppClientFactory.GetClient();
+            // add valid user user but has no permission to Quotes endpoint
+            await httpClient.AuthenticationAsync("test", "test2021");
+
+            //Act
+
+            var response = await httpClient.SendAsync(request);
+            var responseString = await response.Content.ReadAsStringAsync();
+            var exchangeRatesList = JsonConvert.DeserializeObject<ExchangeRatesList>(responseString);
+
+            //Assert
+            response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
+            responseString.Should().Contain("Unauthorized Access");
+            response.IsSuccessStatusCode.Should().BeFalse();
+            exchangeRatesList.Should().NotBeNull();
+            exchangeRatesList.BaseCurrencySymbol.Should().BeNull();
+            exchangeRatesList.CurrenciesRates.Should().BeEmpty();
+
+        }
+
     }
 }

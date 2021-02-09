@@ -5,7 +5,6 @@ using App.Components.ExchangeratesApiClient.Config;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
-using Microsoft.Extensions.Caching.Memory;
 using System.Collections.Generic;
 
 namespace App.Testing.ExchangeratesAPIClientTest
@@ -31,7 +30,7 @@ namespace App.Testing.ExchangeratesAPIClientTest
     }
     public class ServiceProvider
     {
-        private IConfiguration configuration { get; set; }
+        private IConfiguration Configuration { get; set; }
         private IServiceProvider _serviceProvider { set; get; }
         public  ServiceProvider(string appsettingsFileName)
         {
@@ -39,7 +38,7 @@ namespace App.Testing.ExchangeratesAPIClientTest
               .AddJsonFile($"Settings/{appsettingsFileName}")
               .Build();
 
-            configuration = config;
+            Configuration = config;
             _serviceProvider = GetServiceProvider();
 
         }
@@ -49,10 +48,10 @@ namespace App.Testing.ExchangeratesAPIClientTest
         private IServiceProvider GetServiceProvider()
         {
             ServiceCollection services = new ServiceCollection();
-            services.AddSingleton<IConfiguration>(configuration);
+            services.AddSingleton<IConfiguration>(Configuration);
             services.AddMemoryCache();
             services.AddOptions();
-            services.InjectExchangeratesAPIProviderService(configuration);
+            services.InjectExchangeratesAPIProviderService(Configuration);
             return services.BuildServiceProvider();
         }
 

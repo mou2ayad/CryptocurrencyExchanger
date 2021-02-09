@@ -10,6 +10,7 @@ namespace App.Services.CryptocurrencyExchangerAPI.Services
     public interface ICryptocurrencyExchangeProvider
     {
         Task<ExchangeRatesList> GetExchangeRateListAsync(string BaseCryptocurrencySymbol);
-       
+        IExchangeRatesProvider GetProvider(string ProviderName);
+
     }
 }

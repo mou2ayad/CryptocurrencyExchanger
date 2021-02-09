@@ -14,7 +14,7 @@ namespace App.Services.CryptocurrencyExchangerAPI.Models
     {
         public string Name { set; get; }
         public List<string> TargetedCurrencies { set; get; }
-        public int RefreshCurrenyMapInSeconds { set; get; }
+        public string RefreshCurrenyMapCronExpression { set; get; }
     }
 }
 

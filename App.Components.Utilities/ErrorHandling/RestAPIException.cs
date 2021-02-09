@@ -3,7 +3,7 @@ using System.Net;
 using System.Net.Http;
 
 
-namespace App.Components.Utilities.APIClient
+namespace App.Components.Utilities.CustomException
 {
     public class RestAPIException : HttpRequestException
     {

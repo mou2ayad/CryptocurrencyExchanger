@@ -35,7 +35,7 @@ namespace App.Components.CoinmarketcapApiClient.Model
             if (x is null || y is null)
                 return false;
             // compare only symbol
-            return x.Symbol == y.Symbol;
+            return x.Symbol.ToUpper() == y.Symbol.ToUpper();
         }
         public int GetHashCode(CoinmarketcapMapResponseData obj)
         {
